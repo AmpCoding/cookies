@@ -1,0 +1,288 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
+:root {
+    --maroon: #800D1E;
+    --charcoal: #555555;
+    --lightgray: #f0f0f0;
+    --standard-gap: 1.5rem;
+    --standard-height: 1.25rem;
+}
+
+* {
+    font-family: "Roboto", sans-serif;
+}
+
+html {
+    min-height: 100svh;
+}
+
+body {
+    min-height: 100svh;
+    display: grid; /* grid container for page */
+    grid-template-columns: 1fr;
+    /* 1st row CapellaVolunteers.org - auto height
+       2nd row nav bar - auto height
+       3rd row form - 1fr height
+       4th row output - 1fr height
+       5th row footer - auto height - helps keep footer at bottom */
+    grid-template-rows: auto auto 1fr 1fr auto;
+}
+
+.logo { /* logo at the top of the page */
+    text-decoration: none;
+    line-height: 1;
+    font-size: calc(var(--standard-height) * 2);
+    margin-left: var(--standard-gap);
+    margin-top: var(--standard-gap);
+    padding-top: var(--standard-gap);
+    letter-spacing: 3px;
+    color: var(--charcoal);
+}
+
+.org { /* .org is in maroon */
+    color: var(--maroon);
+}
+
+nav {
+    grid-column: 1 / -1; /* given the full width of the page */
+    grid-row: 2;
+    margin: 1rem 0;
+}
+
+/* Style ul as a horizontal nave bar */
+nav ul {
+    list-style: none;
+    margin: 0 0 0 var(--standard-gap);
+    padding: 0;
+}
+
+nav ul li {
+    display: inline-block; /* display the list items horizontally */
+    color: white;
+    height: var(--standard-height);
+    width: 10rem;
+    line-height: var(--standard-height);
+    margin-top: 0.25rem;
+    text-align: center;
+    background-color: var(--charcoal);
+    text-decoration: none;
+}
+
+nav ul li a {
+    display: block; /* make the entire list item clickable */
+    color: white;
+    height: var(--standard-height);
+    padding: 0.25rem;
+    width: 10rem;
+    line-height: var(--standard-height);
+    text-align: center;
+    background-color: var(--charcoal);
+    text-decoration: none;
+}
+
+nav ul li a:hover {
+    background-color: var(--maroon);
+}
+
+/* Styles for the form */
+label {
+    font-size: var(--standard-height);
+    line-height: var(--standard-height);
+    text-align: right;
+    margin: 0.5rem;
+}
+
+input[type=text],
+input[type=password],
+input[type=email]{
+    font-size: var(--standard-height);
+    line-height: var(--standard-height);
+    max-width: 50ch;
+    margin: 0.5rem;
+}
+
+input[type=text]::placeholder,
+input[type=password]::placeholder,
+input[type=email]::placeholder{
+        color: color-mix(in srgb, var(--maroon) 50%, transparent);
+}
+
+
+input[type=password] {
+    font-size: var(--standard-height);
+    line-height: var(--standard-height);
+    max-width: 50ch;
+    margin: 0.5rem;
+}
+
+input[type=button] {
+    height: calc(var(--standard-height) * 2);
+    margin: 0.5rem;
+    padding: 0.25rem;
+    background-color: var(--maroon);
+    color: var(--lightgray);
+    font-size: var(--standard-height);
+}
+
+input[type=button]:hover {
+    color: white;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+input[type=submit] {
+    font-size: var(--standard-height);
+    background-color: var(--maroon);
+    color: white;
+    padding: 0.5rem 2.25rem;
+    margin: var(--standard-gap) 0;
+    border: none;
+    border-radius: 0.25rem;
+    cursor: pointer;
+}
+
+#form-container {
+    max-width: 85ch;
+}
+
+.registration-form {
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+}
+
+.registration-form label {
+    text-align: right;
+    padding-top: 0.5em;
+}
+
+#reg-user-name-label {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+#reg-user-name-input {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+#reg-password-label {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+#reg-password-input {
+    grid-column: 2;
+    grid-row: 2;
+}
+
+#reg-password-verify-label {
+    grid-column: 1;
+    grid-row: 3;
+}
+
+#reg-password-verify-input {
+    grid-column: 2;
+    grid-row: 3;
+}
+
+#reg-first-name-label {
+    grid-column: 1;
+    grid-row: 4;
+}
+
+#reg-first-name-input {
+    grid-column: 2;
+    grid-row: 4;
+}
+
+#reg-last-name-label {
+    grid-column: 1;
+    grid-row: 5;
+}
+
+#reg-last-name-input {
+    grid-column: 2;
+    grid-row: 5;
+}
+
+#reg-email-label {
+    grid-column: 1;
+    grid-row: 6;
+}
+
+#reg-email-input {
+    grid-column: 2;
+    grid-row: 6;
+}
+
+#reg-phone-label {
+    grid-column: 1;
+    grid-row: 7;
+}
+
+#reg-phone-input {
+    grid-column: 2;
+    grid-row: 7;
+}
+
+#reg-newsletter-label {
+    grid-column: 1;
+    grid-row: 8;
+}
+
+#reg-newsletter-signup {
+    grid-column: 2;
+    grid-row: 8;
+    margin-left: 1ch;
+}
+
+.registration-form input[type=submit] {
+    grid-column: 2;
+    grid-row: 9;
+}
+
+#reg-result-message {
+    grid-column: 2;
+    grid-row: 10;
+}
+
+input:not([type=submit]), input:not([type=radio]) {
+    outline: 1px solid hsl(203, 30%, 26%);
+}
+input:not(:placeholder-shown, [type=submit]):valid {
+    outline-color: lawngreen;
+}
+
+input:not(:placeholder-shown):invalid {
+    outline-color: red;
+}
+
+input:focus:invalid {
+    outline-color: dodgerblue;
+}
+
+#output {
+    margin: 1.5rem;
+    padding: 1rem;
+    max-width: 50ch;
+    background-color: var(--lightgray);
+    border: 1px solid var(--charcoal);
+}
+#output-headline {
+    font-size: 1.5rem;
+    color: var(--maroon);
+    margin: 1rem 1rem 1rem 1.5rem;
+}
+
+footer {
+    text-align: center;
+    margin-top: auto; /* footer at the bottom of the page by setting top margin */
+    color: var(--charcoal);
+}
+
+.hidden {
+    visibility: hidden;
+    position: absolute;
+}

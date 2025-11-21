@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Capella Volunteers - Registration</title>
+    <link rel="stylesheet" href="css/styles.wk09.css">
+</head>
+<body>
+<div class="top">
+    <a class="logo" href="registration.html">CapellaVolunteers<span class="org">.org</span></a>
+</div>
+<nav>
+    <ul>
+        <!-- Links won't all work for week 9 -->
+        <li><a href="registration.html">Home</a></li>
+        <li><a href="registration.html">Invitation</a></li>
+        <li><a href="registration.html">Volunteers</a></li>
+        <li><a href="registration.html">Gallery</a></li>
+        <li><a href="registration.html">Registration</a></li>
+    </ul>
+</nav>
+<main id="form-container">
+    <!-- Form's action set to # as part of the process to prevent form submission -->
+    <form action="#" id="reg-form" class="registration-form">
+
+        <!-- User Name: Required, At least 3 chars (letters and digits only) -->
+        <label id="reg-username-label" for="reg-username-input">User Name:</label>
+        <input type="text" id="reg-username-input"
+               placeholder="Username (required, 3 char. min.)"
+               required
+               minlength="3"
+               pattern="[A-Za-z0-9]+"
+               title="Letters and digits only, 3 characters minimum.">
+
+        <!-- Password: Required, At least 8 chars -->
+        <label id="reg-password-label" for="reg-password-input">Password:</label>
+        <input type="password" id="reg-password-input"
+               placeholder="Password (8 char. min.)"
+               required
+               minlength="8"
+               title="Password must be at least 8 characters long.">
+
+        <!-- Password Verify: Required, At least 8 chars (checked for match in JS) -->
+        <label id="reg-password-verify-label" for="reg-password-verify-input">Password Verify:</label>
+        <input type="password" id="reg-password-verify-input"
+               placeholder="Verify Password"
+               required
+               minlength="8"
+               title="Must match the password and be at least 8 characters long.">
+
+        <!-- First Name: Required, At least one char. -->
+        <label id="reg-first-name-label" for="reg-first-name-input">First Name:</label>
+        <input type="text" id="reg-first-name-input"
+               placeholder="First Name (required)"
+               required
+               minlength="1">
+
+        <!-- Last Name: Required, At least one char. -->
+        <label id="reg-last-name-label" for="reg-last-name-input">Last Name:</label>
+        <input type="text" id="reg-last-name-input"
+               placeholder="Last Name (required)"
+               required
+               minlength="1">
+
+        <!-- Email: Required (type="email" handles basic email format validation) -->
+        <label id="reg-email-label" for="reg-email-input">Email:</label>
+        <input type="email" id="reg-email-input"
+               placeholder="Email Address (required)"
+               required>
+
+        <!-- Phone: Optional, Format: (xxx) xxx-xxxx -->
+        <label id="reg-phone-label" for="reg-phone-input">Phone:</label>
+        <input type="text" id="reg-phone-input"
+               placeholder="(xxx) xxx-xxxx (optional)"
+               pattern="^\(\d{3}\) \d{3}-\d{4}$"
+               title="Format must be (xxx) xxx-xxxx, e.g., (123) 456-7890">
+
+        <label id="reg-newsletter-label">Newsletter:</label>
+        <!-- Fieldset used to group radio buttons -->
+        <fieldset id="reg-newsletter-signup">
+            <legend>Newsletter Signup</legend>
+            <label for="newsletter-yes">Yes</label>
+            <input type="radio" name="newsletter" id="newsletter-yes" value="Yes" checked>
+            <label for="newsletter-no">No</label>
+            <input type="radio" name="newsletter" id="newsletter-no" value="No">
+        </fieldset>
+
+        <input type="submit" value="Register" id="reg-submit-button">
+        <div id="reg-result-message"></div>
+    </form>
+</main>
+
+<footer>rev. 2024 for work in IT3240</footer>
+<!-- Script should be loaded at the end of body -->
+<script src="js/registration.js"></script>
+</body>
+</html>
