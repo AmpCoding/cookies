@@ -4,83 +4,151 @@
  * and adds custom JavaScript validation for password matching.
  */
 
+// Helper function to create/delete a cookie.
+const setCookie = function(name, value, days) {
+    let expires = "";
+    if (days) {
+        const date = new Date();
+        // Set expiry date in the future for writing, or in the past for clearing
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    // Set the cookie with proper path and expiration
+    document.cookie = name + "=" + encodeURIComponent(value) + expires + "; path=/";
+};
+
 /**
  * Checks if the password and password verification fields meet HTML5 requirements
- * and, crucially, if their values match. Sets custom validity messages if problems are found.
+ * and if their values match.
  */
 const checkPassword = function() {
     const passwordField = document.getElementById("reg-password-input");
     const verifyPasswordField = document.getElementById("reg-password-verify-input");
 
-    /* Clear custom validity property for password fields before checking the validity of the form
-       This is essential so that a previous custom error doesn't block validation if fixed. */
+    // Clear custom validity from previous attempts
     passwordField.setCustomValidity("");
     verifyPasswordField.setCustomValidity("");
 
-    // Check if both fields meet their HTML5 requirements (like minlength="8")
-    // If they fail, the built-in validation will handle the error message.
+    // Browser will handle invalid minlength/pattern/etc.
     if (!passwordField.checkValidity() || !verifyPasswordField.checkValidity()) {
-        // If HTML5 attributes fail, let the browser handle the error messages/focus.
         return false;
     }
 
-    // Complete code to compare password & verify password.
+    // Compare values
     if (passwordField.value !== verifyPasswordField.value) {
         const errorMessage = "Passwords do not match.";
-
-        // Use setCustomValidity() to assign an error string when the passwords don't match.
-        // This will cause the form's checkValidity() to fail and display the message.
         passwordField.setCustomValidity(errorMessage);
         verifyPasswordField.setCustomValidity(errorMessage);
-
         return false;
     }
 
-    // If the values match and all HTML5 checks pass, the fields are valid.
-    // Setting the custom validity to an empty string means the input is valid (already done above).
     return true;
-}
+};
 
 /**
- * Configures form submission behavior and the click handler for the submit button.
+ * Writes form data to cookies.
+ * Clears old cookies first, then writes one cookie per form field (excluding submit).
+ * Finally submits the form.
+ */
+const writeCookieData = function(form) {
+    const inputs = form.querySelectorAll("input:not([type='submit'])");
+    const processedGroups = new Set();
+
+    const nameMap = {
+        'reg-username-input': 'username',
+        'reg-first-name-input': 'firstname',
+        'reg-last-name-input': 'lastname',
+        'reg-email-input': 'email',
+        'reg-phone-input': 'phone',
+    };
+
+    // --- 1. CLEAR old cookies ---
+    ['username', 'firstname', 'lastname', 'email', 'phone', 'newsletter'].forEach(name => {
+        setCookie(name, "", -1);
+    });
+
+    // --- 2. WRITE new cookies (set to expire in 1 day) ---
+    inputs.forEach(input => {
+        let cookieName = '';
+        let cookieValue = input.value;
+
+        // Skip passwords for security/cleanliness
+        if (input.type === 'password') return;
+
+        // Determine the cookie name
+        if (input.type === 'radio' && input.name === 'newsletter') {
+            cookieName = 'newsletter';
+            // ONLY write newsletter cookie if "Yes" is checked
+            if (input.checked && input.value === 'Yes' && !processedGroups.has(cookieName)) {
+                setCookie(cookieName, cookieValue, 1);
+                processedGroups.add(cookieName);
+            }
+            return;
+        } else if (nameMap[input.id]) {
+            cookieName = nameMap[input.id];
+        } else {
+            return;
+        }
+
+        // Write standard fields
+        setCookie(cookieName, cookieValue, 1);
+    });
+
+        // ADD THIS DEBUG CODE:
+    console.log("All cookies after writing:", document.cookie);
+
+    // --- 3. SUBMIT the form ---
+    form.submit();
+};
+
+/**
+ * Configures form submission behavior & submit button event.
  */
 const configureFormValidation = function() {
+    // Get form elements
     const form = document.getElementById("reg-form");
-    const submitButton = document.getElementById("reg-submit-button");
     const resultMessageDiv = document.getElementById("reg-result-message");
+    // Note: We no longer need a separate reference to submitButton
 
-    // Block form submission (using preventDefault) - need to stay on the same page.
+    // Attach ALL validation and submission logic to the form's ONSUBMIT event.
     form.onsubmit = function(event) {
+        // 1. Temporarily prevent the default HTML form submission/redirection.
         event.preventDefault();
-    }
 
-    submitButton.addEventListener("click", function() {
-        // 1. Call the checkPassword() function to validate password length and matching.
+        // 2. Run custom validation
         const passwordsMatch = checkPassword();
 
-        // 2. Use the form's checkValidity() function to check all HTML5 validation rules.
+        // 3. Since the browser already checked HTML5 validity BEFORE firing onsubmit,
+        //    we only need to check our custom logic (passwordsMatch).
+
+        // We *must* re-check form.checkValidity() here because checkPassword() sets
+        // custom validity that the form might not yet recognize in the submit event's context.
         const formIsValid = form.checkValidity();
 
-        // 3. Display the appropriate message based on validation results.
         if (formIsValid && passwordsMatch) {
-            // Success: Form is valid and passwords match
-            resultMessageDiv.innerHTML = "<p style='color: green;'>Registration successful! Data is ready for submission (submission disabled for this assessment).</p>";
+            // Success message
+            resultMessageDiv.innerHTML = "<p style='color: green;'>Registration successful! Redirecting…</p>";
+
+            // ★ Write cookies + submit the form (or redirect) ★
+            writeCookieData(form); // This function contains the final form.submit()
+
         } else {
-            // Failure: Form is invalid (either passwords don't match, or an HTML5 field failed)
+            // Failure message
+            // The browser will highlight the first failing field (either from HTML5 or checkPassword)
             resultMessageDiv.innerHTML = "<p style='color: red;'>Please correct the errors shown above the Register button and in the highlighted fields.</p>";
 
-            /*
-             When form.checkValidity() fails, the browser automatically prevents submission,
-             sets focus to the first invalid field, and displays the appropriate error message
-             (based on 'title' or built-in messages). We just need to ensure the password
-             fields have their custom validity set correctly by checkPassword().
-             */
+            // If the form fails, we do nothing; the preventDefault() at the top stops the submission.
         }
-    });
-}
+    };
 
-// Event handler called when page has loaded
+    // We do NOT need the separate submitButton.addEventListener("click", ...) block anymore.
+    // However, if you want a failure message to appear *before* the browser's default validation message
+    // when HTML5 validation fails, you can keep a simplified 'click' handler (see notes below).
+
+    // For simplicity and reliability, the above logic is sufficient.
+};
+
+// Event handler when page has loaded
 window.onload = () => {
-    // Add code here to call function to configure validation when page has loaded
     configureFormValidation();
-}
+};
